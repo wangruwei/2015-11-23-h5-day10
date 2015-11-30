@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>pie</title>
+    <style>
+    body {
+        background: #333;
+    }
+    </style>
     <script src="raphael.js"></script>
     <script>
     'use strict';
@@ -21,10 +26,14 @@
         var oPage = Raphael(0,0,1000,800);
         var cx = 300, cy = 300;
         var r = 200;
+        var aPath = [];
         function pie(s,e){
             var oPath = oPage.path();
+            oPath.ang = (e-s)/2+s;
+            aPath.push(oPath);
             oPath.attr({
-                'stroke':'none',
+                'stroke':'#fff',
+                'stroke-width':3,
                 'fill':rndColor(),
                 'path':[
                     'M',cx,cy,
@@ -35,7 +44,7 @@
             });
         }
         var data = [];
-        for(var i=0;i<8;i++){
+        for(var i=0;i<10;i++){
             data.push(parseInt(Math.random()*300+50));
         }
         var sum = 0;
@@ -50,6 +59,20 @@
         for(var i=0;i<angData.length;i++){
             pie(now,now+angData[i]);
             now+=angData[i];
+        }
+        for(var i=0;i<aPath.length;i++){
+            aPath[i].hover(function(){
+                var scale = 1.2;
+                var x = Math.cos(d2a(90-this.ang))*r;
+                var y = Math.sin(d2a(this.ang))*r;
+                x *= 0.2;
+                y *= -0.2;
+                this.animate({
+                    'transform': 's 1.1 1.1 '+cx+' '+cy
+                },200,'bounce');
+            },function(){
+                this.animate({'transform':'s 1 1'},200,'bounce');
+            });
         }
     };
     </script>
