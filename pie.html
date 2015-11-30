@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pie</title>
+    <script src="raphael.js"></script>
+    <script>
+    'use strict';
+    function d2a(n){
+        return n*Math.PI/180;
+    }
+    function rndColor(){
+        return 'rgb('+parseInt(Math.random()*220+100)+','+parseInt(Math.random()*220+100)+','+parseInt(Math.random()*220+100)+')';
+    }
+    function getPos(cx,cy,r,ang){
+        var a = Math.sin(d2a(ang))*r;
+        var b = Math.cos(d2a(ang))*r;
+        return {x:cx+a,y:cy-b}
+    }
+    window.onload = function(){
+        var oPage = Raphael(0,0,1000,800);
+        var cx = 300, cy = 300;
+        var r = 200;
+        function pie(s,e){
+            var oPath = oPage.path();
+            oPath.attr({
+                'stroke':'none',
+                'fill':rndColor(),
+                'path':[
+                    'M',cx,cy,
+                    'L',getPos(cx,cy,r,s).x,getPos(cx,cy,r,s).y,
+                    'A',r,r,(e-s),(e-s)>180?1:0,1,getPos(cx,cy,r,e).x,getPos(cx,cy,r,e).y,
+                    'Z'
+                ].join(' ')
+            });
+        }
+        var data = [];
+        for(var i=0;i<8;i++){
+            data.push(parseInt(Math.random()*300+50));
+        }
+        var sum = 0;
+        for(var i=0;i<data.length;i++){
+            sum+= data[i];
+        }
+        var angData = [];
+        for(var i=0;i<data.length;i++){
+            angData.push(data[i]/sum*360);
+        }
+        var now = 0;
+        for(var i=0;i<angData.length;i++){
+            pie(now,now+angData[i]);
+            now+=angData[i];
+        }
+    };
+    </script>
+</head>
+<body>
+
+</body>
+</html>
